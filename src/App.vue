@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contain">
     <router-view></router-view>
   </div>
 </template>
@@ -19,4 +19,8 @@ export default {
 </script>
 
 <style scoped>
+/* .contain{
+  height: 100vh;
+  overflow: hidden;
+} */
 </style>

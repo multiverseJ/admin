@@ -4,7 +4,7 @@ export const allRightList = (type) => {
     url: `rights/${type}`
   })
 }
-export const menuRight = (type) => {
+export const menuRight = () => {
   return request({
     url: 'menus'
   })

@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
-import VuexPersistence from 'vuex-persist'
-const vuexLocal = new VuexPersistence({
-  storage: window.localStorage
-})
+import role from './modules/role'
+import createPersistedState from 'vuex-persistedstate'
+import getters from './modules/getters'
+const PERSIST_PATHS = ['token']
 
 Vue.use(Vuex)
 
@@ -12,8 +11,7 @@ export default new Vuex.Store({
   state: {
     token: ''
   },
-  getters: {
-  },
+  getters,
   mutations: {
     setToken (state, payload) {
       state.token = payload
@@ -22,7 +20,10 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
+    role
   },
 
-  plugins: [vuexLocal.plugin]
+  plugins: [createPersistedState({
+    paths: PERSIST_PATHS
+  })]
 })

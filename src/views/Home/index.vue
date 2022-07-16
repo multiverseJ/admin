@@ -16,7 +16,12 @@
             :class="asideExtend ? 'el-icon-caret-left' : 'el-icon-caret-right'"
           ></span>
         </div>
-        <el-menu background-color="#373d41" text-color="#fff" unique-opened :collapse="!asideExtend">
+        <el-menu
+          background-color="#373d41"
+          text-color="#fff"
+          unique-opened
+          :collapse="!asideExtend"
+        >
           <el-submenu
             :index="item.order + ''"
             v-for="(item, i) in menu"
@@ -42,18 +47,10 @@
               {{ obj.authName }}</el-menu-item
             >
           </el-submenu>
-          <!-- <el-submenu index="2">
-            <template #title>我的工作台</template>
-            <el-menu-item index="2-1">111</el-menu-item>
-          </el-submenu>
-          <el-submenu index="3">
-            <template #title>我的工作台</template>
-            <el-menu-item index="3-1">111</el-menu-item>
-          </el-submenu> -->
         </el-menu>
       </el-aside>
       <!-- 显示页面 -->
-      <el-main>
+      <el-main class="main">
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -61,19 +58,9 @@
 </template>
 
 <script>
-// import { getUserList } from '@/api/user'
 import { menuRight } from '@/api/right'
 export default {
-  async created () {
-    // try {
-    //   const res = await getUserList({
-    //     pagenum: 1,
-    //     pagesize: 50
-    //   })
-    //   console.log(res)
-    // } catch (err) {
-    //   console.log(err)
-    // }
+  created () {
     this.menuRight()
   },
   data () {
