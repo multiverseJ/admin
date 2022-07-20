@@ -117,7 +117,7 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </div>
     </el-dialog>
-    <!-- //编辑用户提交 -->
+    <!-- //编辑用户提交
     <el-dialog title="编辑用户" :visible.sync="editUserShow">
       <el-form
         :model="editForm"
@@ -141,7 +141,14 @@
         <el-button @click="editUserShow = false">取 消</el-button>
         <el-button type="primary" @click="editSubmit">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <EditForm
+      :editShow.sync="editUserShow"
+      :editForm="editForm"
+      :rules="rules"
+      @updateList="getUserList(1, 10)"
+      @editSubmit="editUserSubmit"
+    ></EditForm>
     <!-- 分配用户角色 -->
     <el-dialog title="提示" :visible.sync="assignShow">
       <p>当前的用户：{{ editForm.username }}</p>
@@ -164,12 +171,12 @@
 </template>
 
 <script>
+import EditForm from '@/components/EditForm.vue'
 import { username, password, email, mobile } from '@/utils/validate'
 import { roleList, assignRole } from '@/api/role'
 import { getUserList, addUser, editUserState, editUserSubmit, deleteUser } from '@/api/user'
 export default {
   created () {
-    // this.getUserList({ pagenum: 1, pagesize: 50 })
     this.getUserList(1, 50)
   },
   data () {
@@ -198,7 +205,6 @@ export default {
         mobile: '',
         id: '',
         role_name: ''
-
       }
     }
   },
@@ -269,25 +275,15 @@ export default {
       this.editForm.id = val.id
     },
     // 编辑确认
-    async editSubmit () {
+    async editUserSubmit (editForm) {
+      console.log(editForm)
       try {
-        await this.$refs.editForm.validate()
-        try {
-          // console.log(this.$refs.editForm)
-          // console.log(this.editForm.id)
-          const res = await editUserSubmit({ id: this.editForm.id, email: this.editForm.email, mobile: this.editForm.mobile })
-
-          // 获取新添加用户信息
-          console.log(res)
-          // 关闭弹出框
-          this.editUserShow = false
-          this.getUserList(1, 10)
-          this.$message.success('更新成功')
-        } catch (err) {
-          console.log(err)
-        }
+        const res = await editUserSubmit(editForm)
+        // 获取新添加用户信息
+        console.log(res)
+        // this.$message.success('更新成功')
       } catch (err) {
-        console.log(err, '校验失败')
+        console.log(err)
       }
     },
     // 根据 ID 查询用户信息
@@ -344,7 +340,7 @@ export default {
   computed: {},
   watch: {},
   filters: {},
-  components: {}
+  components: { EditForm }
 }
 </script>
 

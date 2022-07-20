@@ -154,4 +154,7 @@ export default {
     transition: none;
   }
 }
+.main{
+  height: 94vh;
+}
 </style>
