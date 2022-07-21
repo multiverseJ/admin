@@ -31,41 +31,86 @@
         :before-leave="fn"
       >
         <el-tab-pane label="基本信息">
-          <BasisMessage @validatefn="valid = $event"></BasisMessage>
+          <BasisMessage @validatefn="validInfoFn" ref="basis"></BasisMessage>
         </el-tab-pane>
-        <el-tab-pane label="商品参数">配置管理</el-tab-pane>
-        <el-tab-pane label="商品属性">角色管理</el-tab-pane>
-        <el-tab-pane label="商品图片">角色管理</el-tab-pane>
-        <el-tab-pane label="商品内容">定时任务补偿</el-tab-pane>
+        <el-tab-pane label="商品参数" lazy>
+          <GoodsParam :id="cat_id"></GoodsParam>
+        </el-tab-pane>
+        <el-tab-pane label="商品属性" lazy>
+          <GoodsAttributes :id="cat_id"></GoodsAttributes>
+        </el-tab-pane>
+        <el-tab-pane label="商品图片">
+          <GoodsImage></GoodsImage>
+        </el-tab-pane>
+        <el-tab-pane label="商品内容">
+          <GoodsContent @submit="submitFn"></GoodsContent>
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
 </template>
 
 <script>
+import { submitGoods } from '@/api/goods.js'
 import BasisMessage from './components/BasisMessage'
+import GoodsParam from './components/GoodsParam'
+import GoodsAttributes from './components/GoodsAttributes'
+import GoodsImage from './components/GoodsImage'
+import GoodsContent from './components/GoodsContent'
 export default {
   created () { },
   data () {
     return {
       active: 0,
       tabPosition: 'left',
-      valid: true
+      valid: true,
+      cat_id: null,
+      form: {
+        goods_name: '',
+        goods_price: 0,
+        goods_weight: 0,
+        goods_number: 0,
+        goods_introduce: '',
+        goods_cat: '',
+        attrs: [],
+        pics: []
+      }
     }
   },
   methods: {
     changefn (tab) {
       if (!this.valid) return this.$message.error('请完整填写表单')
       this.active = +tab.index
+      this.cat_id = this.$refs.basis.value[2]
+      // console.log(this.cat_id)
+      this.form.goods_cat = this.$refs.basis.value.join(',')
+      // console.log(this.form.goods_cat)
     },
     fn () {
       if (!this.valid) return false
+      // this.cat_id = this.$refs.basis.value
+    },
+    validInfoFn (flag, form) {
+      this.valid = flag
+      this.form = { ...this.form, ...form }
+      console.log(this.form)
+    },
+    // 提交
+    async submitFn (quill) {
+      this.form.goods_introduce = quill
+      try {
+        await submitGoods(this.form)
+        this.$message.success('创建成功')
+        this.$router.push('/goods')
+      } catch (err) {
+        this.$message.error('创建失败')
+      }
     }
   },
   computed: {},
   watch: {},
   filters: {},
-  components: { BasisMessage }
+  components: { BasisMessage, GoodsParam, GoodsAttributes, GoodsImage, GoodsContent }
 
 }
 </script>

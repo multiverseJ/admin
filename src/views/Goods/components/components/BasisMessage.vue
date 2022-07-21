@@ -19,7 +19,7 @@
         :props="{
           expandTrigger: 'hover',
           label: 'cat_name',
-          value: 'cat_name',
+          value: 'cat_id',
         }"
         @change="handleChange"
       ></el-cascader>
@@ -36,15 +36,14 @@ export default {
   },
   data () {
     const validFn = (rule, value, callback) => {
-      this.value.length === 0 ? callback(new Error('请选择')) : callback()
+      this.value.length < 3 ? callback(new Error('请选择至三级')) : callback()
     }
     return {
       form: {
         goods_name: '',
         goods_price: 0,
         goods_weight: 0,
-        goods_number: 0,
-        value: ''
+        goods_number: 0
       },
       rules: {
         goods_name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
@@ -61,9 +60,11 @@ export default {
       value: [],
       options: [],
       flag: null
+
     }
   },
   methods: {
+    // 商品分类列表
     async goodsCategoriesList () {
       const res = await goodsCategoriesList()
       console.log(res)
@@ -72,12 +73,14 @@ export default {
     handleChange (value) {
       console.log(value)
     },
+    // 表单校验
     validatefn () {
       this.$refs.form.validate((value) => {
         if (!value) this.flag = false
         else this.flag = true
       })
     }
+
   },
   computed: {
   },
@@ -87,7 +90,12 @@ export default {
   updated () {
     this.validatefn()
     console.log(this.flag)
-    this.$emit('validatefn', this.flag)
+
+    if (this.flag) {
+      this.$emit('validatefn', this.flag, this.form)
+    } else {
+      this.$emit('validatefn', this.flag)
+    }
   }
 
 }

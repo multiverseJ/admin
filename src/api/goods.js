@@ -39,3 +39,16 @@ export const deleteGoods = (id) => {
     url: `goods/${id}`
   })
 }
+export const getParamsList = ({ id, sel }) => {
+  return request({
+    url: `categories/${id}/attributes`,
+    params: { sel }
+  })
+}
+export const submitGoods = (data) => {
+  return request({
+    url: 'goods',
+    method: 'POST',
+    data
+  })
+}
