@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+// 商品分类列表
 export const goodsCategoriesList = (params) => {
   return request({
     url: 'categories',
